@@ -4,7 +4,14 @@
   <meta charset="UTF-8" />
   <title>Лендинг с умным помощником</title>
 
-  <style>
+  <style> 
+      /*Адаптация под экран телефона*/
+      @media (max-width: 480px) {
+      #consultation-form {
+      padding: 15px;
+      max-width: 90%;
+    }
+  }
     body {
       background-image: url("img0983.jpg");
       font-family: Arial, sans-serif;
@@ -149,7 +156,7 @@ function showQuestion() {
     step++;
     showQuestion();
   } else {
-    chat.innerHTML += `<div class="bot">Спасибо! Заявка отправлена 👍</div>`;
+    chat.innerHTML += `<div class="bot">Thank you! I will contact you shortly 👍</div>`;
     input.style.display = "none";
     nextBtn.style.display = "none";
     await sendToWorker();
@@ -172,7 +179,7 @@ async function sendToWorker() {
 
     if (data.telegram_http_status === 200) {
         // ✅ Успешная отправка
-        message.textContent = "Спасибо! Я свяжусь с Вами в ближайшее время.";
+        message.textContent = "Thank you! I will contact you shortly.";
         message.style.color = "green";
         form.reset(); // очищаем форму
       } else {
@@ -182,7 +189,7 @@ async function sendToWorker() {
         
      } catch (err) {
       console.error(err);
-      message.textContent = "Ошибка отправки. Попробуйте позже.";
+      message.textContent = "Sending error. Please try again later.";
       message.style.color = "red";
     }
   }
@@ -194,5 +201,6 @@ async function sendToWorker() {
 
    </body>
   </html>
+
 
 
