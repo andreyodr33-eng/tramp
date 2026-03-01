@@ -7,6 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+      * {
+      box-sizing: border-box;
+  }
+    body {
+       overflow-x: hidden;
+   }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -186,14 +192,17 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
-      .menu-grid {
+      .menu {
         grid-template-columns: repeat(2, 1fr);
      
       }
     }
 
     @media (max-width: 500px) {
-      .menu-grid {
+      .triple {
+        grid-template-columns: 1ft;
+     }   
+      .menu {
         grid-template-columns: repeat(2, 1fr);
       }
     }
@@ -507,6 +516,7 @@ document.getElementById('adminLink').addEventListener('click', function(e){
 
 </body>
 </html>
+
 
 
 
