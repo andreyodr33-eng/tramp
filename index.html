@@ -311,7 +311,7 @@ recognition.onresult = function(event) {
   console.log("Вы сказали:", text);
 
   for (let name in recipes) {
-    if (text.includes(name)) {
+    if (text.includes(name) || name.includes(text)) {
       startRecipe(name);
       return;
     }
