@@ -300,7 +300,13 @@ recognition.lang = "ru-RU";
 document.getElementById("micBtn").onclick = () => {
   recognition.start();
 };
+recognition.onstart = () => {
+  micBtn.style.background = "red";
+};
 
+recognition.onend = () => {
+  micBtn.style.background = "#27ae60";
+};
 recognition.onresult = function(event) {
   const text = normalize(event.results[0][0].transcript);
   console.log("Вы сказали:", text);
