@@ -228,8 +228,9 @@ for (let name in recipes) {
 
 // функция озвучки
 function speak(text) {
+  speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "uK-UA";
+  utter.lang = "ru-RU";
   speechSynthesis.speak(utter);
 }
 
