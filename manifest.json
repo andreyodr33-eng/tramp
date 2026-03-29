@@ -3,7 +3,7 @@
   "short_name": "box",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffefd5;",
+  "background_color": "#ffefd5",
   "theme_color": "#ff8c42",
   "icons": [
     {
