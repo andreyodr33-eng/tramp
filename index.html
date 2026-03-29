@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кухонный тренажер пиццейоло</title>
+  <link rel="stylesheet" href="style.css">
+<style>
+/* контейнер всего интерфейса */
+#container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* левая колонка */
+#pizza-list {
+  width: 25%;
+  background: #ffefd5;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+#pizza-list button {
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  background: #ff8c42;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* правая колонка */
+#right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  position: relative;
+}
+
+/* блок таймера и паузы */
+#controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* окно состава */
+#output {
+  flex: 1;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 18px;
+  overflow-y: auto;
+  background: #fff8dc;
+}
+
+/* кнопка микрофона */
+#micBtn {
+  margin-top: 10px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  font-size: 32px;
+ 
+  background: #27ae60;
+  color: white;
+  cursor: pointer;
+  align-self: center;
+  border: 3px solid #FFC966;
+}
+.tg-box:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+
+    <!-- левая колонка с кнопками -->
+    <div id="pizza-list"></div>
+
+    <!-- правая колонка -->
+    <div id="right-panel">
+      <div id="controls">
+        <span id="timer">00:00</span>
+        <label>
+          Пауза (сек):
+          <input type="number" id="pauseInput" min="1" max="60" value="2" style="width:50px;">
+        </label>
+      </div>
+      <div id="output">
+        коснитесь микрофона и скажите название пиццы
+      </div>
+      <button id="micBtn" class="tg-box">🎤</button>
+    </div>
+  </div>
+
+  <script>
+function normalize(text) {
+  return text.toLowerCase().replace(/[^\w\sа-я]/gi,"").trim();
+}
+
+const recipes = {
+  "карбонара": [
+    ["вершки", 50], 
+    ["сир Моцарела", 90],
+    ["бекон", 60],
+    ["помiдор", 30],
+    ["печерицi", 38],
+    ["приправа орегано", 1]
+  ],
+  "пеперони": [
+    ["соус томадоро", 75],
+    ["сыр Моцарела", 120],
+    ["ковбаски пеперонi", 75],
+    ["cыр Пармезан", 5]
+  ],
+  "маргарита": [
+    ["соус томадоро", 60],
+    ["сыр Моцарела", 120],
+    ["помідор", 60],
+    ["приправа орегано", 1]
+  ],
+  "барбекю": [
+    ["соус томадоро", 60],
+    ["соус барбекю", 20],
+    ["сыр Моцарела", 90],
+    ["бекон", 30],
+    ["фiле куряче ", 30],
+    ["печерицi", 30],
+    ["перець болгарський", 30],
+    ["цибуля маринована ", 30],
+    ["приправа орегано", 1]
+  ],
+  "чотири м'яса": [
+    ["соус Гірчичный", 60],
+    ["сыр Моцарела", 90],
+    ["шинка", 30],
+    ["бекон", 30],
+    ["салямі", 30],
+    ["печерицi", 30],
+    ["ковбаски Мисливські", 30],
+    ["помідор", 60],
+    ["петрушка", 4]
+  ],
+  "чотири сира": [
+    ["вершки", 50], 
+    ["сир Моцарела", 90],
+    ["сир Дор Блю", 30],
+    ["сир твердий", 30],
+    ["сир Фета", 30],
+    ["приправа орегано", 1]
+  ],
+   "сирне курча": [
+    ["соус Гірчичный", 60], 
+    ["сыр Моцарeла", 90],
+    ["філе куряче", 60],
+    ["печериці", 30],
+    ["сир твердий", 30],
+    ["приправа орегано", 1]
+  ],
+ "селянська": [
+    ["соус Гірчичный", 60],
+    ["сыр Моцарела", 90],
+    ["бекон", 30],
+    ["шинка", 30],
+    ["печерицi", 30],
+    ["огірки солоні", 20],
+    ["цибуля маринована", 30],
+    ["петрушка", 3]
+  ],
+  "баварська": [
+    ["соус Гірчичный", 60],
+    ["сыр Моцарела", 90],
+    ["бекон", 30],
+    ["ковбаски мисливсьлі", 30],
+    ["печерицi", 30],
+    ["перець болгарський", 20],
+    ["цибуля маринована", 30]
+  ],
+  "мексиканская": [
+    ["соус томадоро", 60],
+    ["сыр моцарЕлла", 90],
+    ["колбаски", 30],
+    ["копченое куриное филе", 30],
+    ["перец болгарский", 30],
+    ["кукуруза", 20],
+    ["чили", 4],
+    ["шрирача", 10],
+    ["петрушка", 4]
+  ]
+};
+
+let currentTimer = null;
+
+const listDiv = document.getElementById("pizza-list");
+const output = document.getElementById("output");
+const timerDiv = document.getElementById("timer");
+
+const pauseInput = document.getElementById("pauseInput");
+
+// создание кнопок
+for (let name in recipes) {
+  const btn = document.createElement("button");
+  btn.textContent = name;
+  btn.onclick = () => startRecipe(name);
+  listDiv.appendChild(btn);
+}
+
+// функция озвучки
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "uK-UA";
+  speechSynthesis.speak(utter);
+}
+
+// запуск рецепта
+async function startRecipe(name) {
+  const pause = pauseInput ? parseInt(pauseInput.value) * 1000 : 2000;
+  const recipe = recipes[name];
+
+  // отображаем весь состав сразу
+  output.innerHTML = `<h2>${name.toUpperCase()}</h2>`;
+  for (let item of recipe) {
+    output.innerHTML += `<div>${item[0]} - ${item[1]} грамм</div>`;
+  }
+
+  // озвучка
+  for (let item of recipe) {
+    
+    const line = `${item[0]} - ${item[1]} грамм`;
+    speak(line);
+    await new Promise(r => setTimeout(r, pause));
+  }
+
+  speak("Пора в печь");
+  startTimer();
+}
+
+// таймер
+function startTimer() {
+  let seconds = 0;
+
+  const maxTimeInput = document.getElementById("bakeTime");
+  const maxMinutes = maxTimeInput ? parseInt(maxTimeInput.value) : 4;
+  const maxSeconds = maxMinutes * 60;
+
+  if (currentTimer) clearInterval(currentTimer);
+
+  currentTimer = setInterval(() => {
+    seconds++;
+
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+
+    // формат 00:00
+    timerDiv.textContent = 
+      `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+    // 🔊 озвучка только каждую минуту
+    if (sec === 0) {
+      speak(`${min} минута`);
+    }
+
+    // ⏹ окончание
+    if (seconds >= maxSeconds) {
+      clearInterval(currentTimer);
+      currentTimer = null;
+      speak("Готово");
+    }
+
+  }, 1000);
+}
+
+// голосовой ввод
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = "ru-RU";
+
+document.getElementById("micBtn").onclick = () => {
+  recognition.start();
+};
+
+recognition.onresult = function(event) {
+  const text = normalize(event.results[0][0].transcript);
+  console.log("Вы сказали:", text);
+
+  for (let name in recipes) {
+    if (text.includes(name)) {
+      startRecipe(name);
+      return;
+    }
+  }
+
+  alert("Пицца не найдена");
+};
+</script>
+</body>
+</html>
