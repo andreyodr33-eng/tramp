@@ -313,7 +313,9 @@ recognition.onresult = function(event) {
 
   for (let name in recipes) {
     if (text.includes(name) || name.includes(text)) {
+      setTimeout(() => {
       startRecipe(name);
+      }, 200);   
       return;
     }
   }
