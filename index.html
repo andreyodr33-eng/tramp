@@ -323,58 +323,17 @@ recognition.onresult = function(event) {
   alert("Пицца не найдена");
 };
 </script>
+  
 <script>
-
-function resetApp() {
-  // остановка озвучки
-  speechSynthesis.cancel();
-
-  // остановка таймера
-  if (typeof currentTimer !== "undefined" && currentTimer) {
-    clearInterval(currentTimer);
-    currentTimer = null;
-  }
-
-  // остановка процесса (если используешь)
-  if (typeof isRunning !== "undefined") {
-    isRunning = false;
-  }
-
-  // очистка экрана
-  const output = document.getElementById("output");
-  if (output) {
-    output.innerHTML = "коснитесь микрофона и скажите название пиццы";
-  }
-
-  // сброс таймера
-  const timerDiv = document.getElementById("timer");
-  if (timerDiv) {
-    timerDiv.textContent = "00:00";
+async function startMic() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    console.log("Микрофон включён:", stream);
+  } catch (err) {
+    console.error("Ошибка доступа к микрофону:", err);
   }
 }
-
-
-// 🔘 обработка кнопки микрофона
-const micBtn = document.getElementById("micBtn");
-
-micBtn.addEventListener("click", () => {
-
-  // 🔥 сначала сброс
-  resetApp();
-
-  // 🔥 разблокировка звука (iPhone)
-  const unlock = new SpeechSynthesisUtterance("");
-  speechSynthesis.speak(unlock);
-
-  // запуск распознавания
-  try {
-    recognition.start();
-  } catch (e) {
-    console.log("уже запущено");
-  }
-
-});
-
 </script>
+
 </body>
 </html>
