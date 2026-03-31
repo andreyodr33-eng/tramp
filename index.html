@@ -274,6 +274,7 @@ async function startRecipe(name) {
   }
 
   // озвучка
+  await new Promise(r => setTimeout(r, 300));
   for (let item of recipe) {
     const line = `${item[0]} - ${item[1]} грам`;
     speak(line);
