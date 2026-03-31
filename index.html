@@ -252,7 +252,7 @@ function speak(text) {
   speechSynthesis.cancel(); // 🔥 важно для iPhone
 
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "uk-UA";
+  utter.lang = "ru-Ru";
 
   speechSynthesis.speak(utter);
 }
