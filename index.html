@@ -282,8 +282,11 @@ async function startRecipe(name) {
   }
 
   speak("Пора в піч");
-  startTimer();
-}
+  setTimeout(() => {
+    try {
+      recognition.start();
+  } catch (e) {}
+}, 500);
 
 // -------------------- таймер --------------------
 function startTimer() {
