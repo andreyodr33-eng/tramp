@@ -336,19 +336,13 @@ recognition.onresult = function(event) {
   console.log("Вы сказали:", text);
 
   for (let name in recipes) {
-    const n = normalize(name);
-
-    if (
-      text.includes(n) ||
-      n.includes(text) ||
-      text.replace(/\s/g,'') === n.replace(/\s/g,'')
-    ) {
+    if (text.includes(name) || name.includes(text)) {
+       recognition.stop();
+  
       startRecipe(name);
       return;
     }
   }
-
-  console.log("Не распознано");
 };
 
 // -------------------- кнопка --------------------
