@@ -286,66 +286,6 @@ stopBtn.onclick = () => {
 };
 
 </script>
-<script>
-(function() {
-  const timerDiv = document.getElementById("timer");
-  const bakeTimeInput = document.getElementById("bakeTime");
-  let timerInterval = null;
-  let seconds = 0;
-
-  function speakMinute(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "ru-RU"; // или "uk-UA", если нужен украинский
-    speechSynthesis.speak(utter);
-  }
-
-  function startTimerWithVoice() {
-    // сброс предыдущего таймера
-    if (timerInterval) clearInterval(timerInterval);
-    seconds = 0;
-
-    const maxMinutes = parseInt(bakeTimeInput.value) || 4;
-    const maxSeconds = maxMinutes * 60;
-
-    timerDiv.textContent = "00:00";
-
-    timerInterval = setInterval(() => {
-      seconds++;
-      const min = Math.floor(seconds / 60);
-      const sec = seconds % 60;
-
-      // обновление дисплея
-      timerDiv.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-
-      // озвучка каждой полной минуты
-      if (sec === 0 && seconds <= maxSeconds) {
-        speakMinute(`${min} минута`);
-      }
-
-      // конец
-      if (seconds >= maxSeconds) {
-        clearInterval(timerInterval);
-        speakMinute("Готово");
-      }
-    }, 1000);
-  }
-
-  // Автоматически запускаем таймер при нажатии на кнопку пиццы
-  // Предполагается, что startRecipe вызывается кнопками пицц
-  const originalStartRecipe = window.startRecipe;
-  window.startRecipe = async function(name) {
-    await originalStartRecipe(name);
-    startTimerWithVoice();
-  };
-
-  // Сброс таймера при STOP
-  const stopBtn = document.getElementById("stopBtn");
-  stopBtn.addEventListener("click", () => {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
-  });
-})();
-</script>
   <script>
 (function() {
   const timerDiv = document.getElementById("timer");
