@@ -110,7 +110,7 @@
       <div id="output">
         коснитесь микрофона и скажите название пиццы
       </div>
-      <button id="micBtn" class="tg-box">🎤</button>
+      <button id="micBtn" class="tg-box">stop</button>
       
     </div>
   </div>
@@ -208,108 +208,61 @@ const recipes = {
   ]
 };
 
-// -------------------- DOM --------------------
+// отображение кнопок
 const listDiv = document.getElementById("pizza-list");
-const output = document.getElementById("output");
-const timerDiv = document.getElementById("timer");
-const pauseInput = document.getElementById("pauseInput");
-
-// -------------------- состояние --------------------
-let currentTimer = null;
-let isStopped = false;
-
-// -------------------- кнопки пицц --------------------
 for (let name in recipes) {
   const btn = document.createElement("button");
   btn.textContent = name;
-
-  btn.onclick = () => {
-    stopAll(); // 🔥 остановить прошлое
-    startRecipe(name);
-  };
-
+  btn.onclick = () => startRecipe(name);
   listDiv.appendChild(btn);
 }
 
-// -------------------- озвучка --------------------
+const output = document.getElementById("output");
+const timerDiv = document.getElementById("timer");
+
 function speak(text) {
-  speechSynthesis.cancel();
-
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "uk-UA";
-
+  utter.lang = "ru-RU";
   speechSynthesis.speak(utter);
 }
 
-// -------------------- запуск рецепта --------------------
 async function startRecipe(name) {
-  isStopped = false;
-
-  const pause = parseInt(pauseInput.value) * 1000;
+  const pause = parseInt(document.getElementById("pauseInput").value) * 1000;
   const recipe = recipes[name];
 
-  // вывод
   output.innerHTML = `<h2>${name.toUpperCase()}</h2>`;
+
   for (let item of recipe) {
-    output.innerHTML += `<div>${item[0]} - ${item[1]} грам</div>`;
-  }
+    const line = `${item[0]} - ${item[1]} грамм`;
+    output.innerHTML += `<div>${line}</div>`;
 
-  await new Promise(r => setTimeout(r, 300));
-
-  // озвучка
-  for (let item of recipe) {
-
-    if (isStopped) return; // 🔥 остановка
-
-    const line = `${item[0]} - ${item[1]} грам`;
     speak(line);
-
     await new Promise(r => setTimeout(r, pause));
   }
 
-  if (isStopped) return;
-
-  speak("Пора в піч");
+  speak("Пора в печь");
   startTimer();
 }
 
-// -------------------- таймер --------------------
 function startTimer() {
-  let seconds = 0;
+  let minute = 0;
+  timerDiv.textContent = "";
 
-  if (currentTimer) clearInterval(currentTimer);
+  const interval = setInterval(() => {
+    minute++;
+    timerDiv.textContent = `${minute} минута`;
 
-  currentTimer = setInterval(() => {
+    speak(`${minute} минута`);
 
-    if (isStopped) {
-      clearInterval(currentTimer);
-      return;
-    }
-
-    seconds++;
-
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-
-    timerDiv.textContent =
-      `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-
-    if (sec === 0 && min > 0) {
-      speak(`${min} хвилина`);
-    }
-
-    if (seconds >= 240) {
-      clearInterval(currentTimer);
+    if (minute >= 4) {
+      clearInterval(interval);
       speak("Готово");
     }
-
-  }, 1000);
+  }, 60000);
 }
 
-// -------------------- СТОП --------------------
+// ---------------- STOP ----------------
 function stopAll() {
-  isStopped = true;
-
   speechSynthesis.cancel();
 
   if (currentTimer) {
@@ -318,23 +271,18 @@ function stopAll() {
   }
 
   timerDiv.textContent = "00:00";
-  output.innerHTML = "Оберіть піцу";
+  output.innerHTML = "Выберите пиццу";
 }
 
-// -------------------- кнопка STOP --------------------
+// ---------------- кнопка STOP ----------------
 const stopBtn = document.getElementById("micBtn");
-
-stopBtn.textContent = "STOP";
 
 stopBtn.onclick = () => {
   stopAll();
 };
 
-
-
-
 </script>
 
-
 </body>
+
 </html>
