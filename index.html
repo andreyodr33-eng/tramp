@@ -116,27 +116,6 @@
   </div>
 
   <script>
-
-// -------------------- утилиты --------------------
-function normalize(text) {
-  return text.toLowerCase().replace(/[^\w\sа-яіїєґ]/gi,"").trim();
-}
-
-// -------------------- доступ к микрофону --------------------
-let micInitialized = false;
-
-async function startMic() {
-  if (micInitialized) return;
-
-  try {
-    await navigator.mediaDevices.getUserMedia({ audio: true });
-    micInitialized = true;
-    console.log("Микрофон разрешён");
-  } catch (err) {
-    console.error("Ошибка доступа к микрофону:", err);
-  }
-}
-
 // -------------------- рецепты --------------------
 const recipes = {
   "карбонара": [
@@ -229,40 +208,42 @@ const recipes = {
   ]
 };
 
-
-
 // -------------------- DOM --------------------
-let currentTimer = null;
-
 const listDiv = document.getElementById("pizza-list");
 const output = document.getElementById("output");
 const timerDiv = document.getElementById("timer");
 const pauseInput = document.getElementById("pauseInput");
 
-// -------------------- кнопки --------------------
+// -------------------- состояние --------------------
+let currentTimer = null;
+let isStopped = false;
+
+// -------------------- кнопки пицц --------------------
 for (let name in recipes) {
   const btn = document.createElement("button");
   btn.textContent = name;
-  btn.onclick = () => startRecipe(name);
+
+  btn.onclick = () => {
+    stopAll(); // 🔥 остановить прошлое
+    startRecipe(name);
+  };
+
   listDiv.appendChild(btn);
 }
 
 // -------------------- озвучка --------------------
 function speak(text) {
-  speechSynthesis.cancel(); // 🔥 важно для iPhone
+  speechSynthesis.cancel();
 
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "ru-Ru";
-setTimeout(() => {
+  utter.lang = "uk-UA";
+
   speechSynthesis.speak(utter);
- }, 100);
 }
 
-// -------------------- рецепт --------------------
+// -------------------- запуск рецепта --------------------
 async function startRecipe(name) {
-
-  speechSynthesis.cancel(); // стоп старого
-  if (currentTimer) clearInterval(currentTimer);
+  isStopped = false;
 
   const pause = parseInt(pauseInput.value) * 1000;
   const recipe = recipes[name];
@@ -273,21 +254,25 @@ async function startRecipe(name) {
     output.innerHTML += `<div>${item[0]} - ${item[1]} грам</div>`;
   }
 
-  // озвучка
   await new Promise(r => setTimeout(r, 300));
+
+  // озвучка
   for (let item of recipe) {
+
+    if (isStopped) return; // 🔥 остановка
+
     const line = `${item[0]} - ${item[1]} грам`;
     speak(line);
+
     await new Promise(r => setTimeout(r, pause));
   }
 
+  if (isStopped) return;
+
   speak("Пора в піч");
-  setTimeout(() => {
-    try {
-      recognition.start();
-  } catch (e) {}
- }, 500);
+  startTimer();
 }
+
 // -------------------- таймер --------------------
 function startTimer() {
   let seconds = 0;
@@ -295,6 +280,12 @@ function startTimer() {
   if (currentTimer) clearInterval(currentTimer);
 
   currentTimer = setInterval(() => {
+
+    if (isStopped) {
+      clearInterval(currentTimer);
+      return;
+    }
+
     seconds++;
 
     const min = Math.floor(seconds / 60);
@@ -315,60 +306,31 @@ function startTimer() {
   }, 1000);
 }
 
-// -------------------- голос --------------------
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
+// -------------------- СТОП --------------------
+function stopAll() {
+  isStopped = true;
 
-recognition.lang = "ru-Ru";
-recognition.continuous = true;
+  speechSynthesis.cancel();
 
-// 🔥 авто-перезапуск (ВАЖНО)
-let isListening = false;
-
-recognition.onend = () => {
-  if (isListening) {
-    setTimeout(() => {
-      try { recognition.start(); } catch(e){}
-    }, 300);
+  if (currentTimer) {
+    clearInterval(currentTimer);
+    currentTimer = null;
   }
+
+  timerDiv.textContent = "00:00";
+  output.innerHTML = "Оберіть піцу";
+}
+
+// -------------------- кнопка STOP --------------------
+const stopBtn = document.getElementById("micBtn");
+
+stopBtn.textContent = "STOP";
+
+stopBtn.onclick = () => {
+  stopAll();
 };
 
-// результат
-recognition.onresult = function(event) {
-  const text = normalize(event.results[0][0].transcript);
-  console.log("Вы сказали:", text);
 
-  for (let name in recipes) {
-    if (text.includes(name) || name.includes(text)) {
-       recognition.stop();
-  
-      startRecipe(name);
-      return;
-    }
-  }
-};
-
-// -------------------- кнопка --------------------
-const micBtn = document.getElementById("micBtn");
-
-micBtn.onclick = async () => {
-
-  await startMic();
-
-  const unlock = new SpeechSynthesisUtterance("");
-  speechSynthesis.speak(unlock);
-
-  isListening = true;
-
-  try {
-    recognition.start();
-  } catch (e) {}
-};
-
-// визуал
-recognition.onstart = () => {
-  micBtn.style.background = "red";
-};
 
 
 </script>
