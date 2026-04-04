@@ -279,11 +279,9 @@ function stopAll() {
 }
 
 // ---------------- кнопка STOP ----------------
-const stopBtn = document.getElementById("micBtn");
+document.getElementById("micBtn").onclick = stopAll;
 
-stopBtn.onclick = () => {
-  stopAll();
-};
+
 
 </script>
 </body>
