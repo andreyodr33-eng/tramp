@@ -108,7 +108,7 @@
         </label>
         <label>
           Время печи (мин):
-          <input type="number" id="bakeTime" min="1" max="10" value="4">
+          <input type="number" id="bakeTime" min="1" max="10" value="3">
         </label> 
       </div>
       <div id="output">
@@ -285,67 +285,6 @@ stopBtn.onclick = () => {
   stopAll();
 };
 
-</script>
-<script>
-let timerInterval = null;
-
-function startTimerWithVoice() {
-  const timerDiv = document.getElementById("timer");
-  const bakeTimeInput = document.getElementById("bakeTime");
-
-  let seconds = 0;
-
-  if (timerInterval) clearInterval(timerInterval);
-
-  const maxMinutes = parseInt(bakeTimeInput?.value) || 4;
-  const maxSeconds = maxMinutes * 60;
-
-  timerDiv.textContent = "00:00";
-
-  timerInterval = setInterval(() => {
-    seconds++;
-
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-
-    timerDiv.textContent =
-      `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-
-    // 🔊 озвучка минут
-    if (sec === 0 && seconds <= maxSeconds) {
-      const utter = new SpeechSynthesisUtterance(`${min} минута`);
-      utter.lang = "ru-RU";
-      speechSynthesis.speak(utter);
-    }
-
-    // ⏹ конец
-    if (seconds >= maxSeconds) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-
-      const utter = new SpeechSynthesisUtterance("Готово");
-      utter.lang = "ru-RU";
-      speechSynthesis.speak(utter);
-    }
-
-  }, 1000);
-}
-
-// 🔴 STOP работает ЗДЕСЬ (без конфликтов)
-document.getElementById("stopBtn").onclick = () => {
-
-  // остановка таймера
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-
-  // остановка озвучки
-  speechSynthesis.cancel();
-
-  // сброс UI
-  document.getElementById("timer").textContent = "00:00";
-};
 </script>
 </body>
 </html>
