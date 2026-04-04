@@ -286,77 +286,74 @@ stopBtn.onclick = () => {
 };
 
 </script>
-  <script>
-(function() {
+<script>
+let timerInterval = null;
+
+function startTimerWithVoice() {
   const timerDiv = document.getElementById("timer");
   const bakeTimeInput = document.getElementById("bakeTime");
-  const stopBtn = document.getElementById("stopBtn");
-  let timerInterval = null;
+
   let seconds = 0;
 
-  function speakMinute(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "ru-RU"; // можно "uk-UA"
-    speechSynthesis.speak(utter);
-  }
+  if (timerInterval) clearInterval(timerInterval);
 
-  function startTimerWithVoice() {
-    // сброс предыдущего таймера и озвучки
-    if (timerInterval) clearInterval(timerInterval);
-    speechSynthesis.cancel();
-    seconds = 0;
+  const maxMinutes = parseInt(bakeTimeInput?.value) || 4;
+  const maxSeconds = maxMinutes * 60;
 
-    const maxMinutes = parseInt(bakeTimeInput.value) || 4;
-    const maxSeconds = maxMinutes * 60;
+  timerDiv.textContent = "00:00";
 
-    timerDiv.textContent = "00:00";
+  timerInterval = setInterval(() => {
+    seconds++;
 
-    timerInterval = setInterval(() => {
-      seconds++;
-      const min = Math.floor(seconds / 60);
-      const sec = seconds % 60;
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
 
-      // обновление дисплея
-      timerDiv.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    timerDiv.textContent =
+      ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')};
 
-      // озвучка каждой полной минуты
-      if (sec === 0 && seconds <= maxSeconds) {
-        speakMinute(`${min} минута`);
-      }
+    // 🔊 озвучка минут
+    if (sec === 0 && seconds <= maxSeconds) {
+      const utter = new SpeechSynthesisUtterance(`${min} минута`);
+      utter.lang = "ru-RU";
+      speechSynthesis.speak(utter);
+    }
 
-      // конец
-      if (seconds >= maxSeconds) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        speakMinute("Готово");
-      }
-    }, 1000);
-  }
+    // ⏹ конец
+    if (seconds >= maxSeconds) {
+      clearInterval(timerInterval);
+      timerInterval = null;
 
-  // Перехват оригинального startRecipe, чтобы запускать таймер после озвучки состава
-  const originalStartRecipe = window.startRecipe;
-  window.startRecipe = async function(name) {
-    await originalStartRecipe(name);
-    startTimerWithVoice();
-  };
+      const utter = new SpeechSynthesisUtterance("Готово");
+      utter.lang = "ru-RU";
+      speechSynthesis.speak(utter);
+    }
 
-  // Кнопка STOP
-  stopBtn.addEventListener("click", () => {
-    // остановка таймера
-    if (timerInterval) clearInterval(timerInterval);
+  }, 1000);
+}
+
+// 🔴 STOP работает ЗДЕСЬ (без конфликтов)
+document.getElementById("stopBtn").onclick = () => {
+
+  // остановка таймера
+  if (timerInterval) {
+    clearInterval(timerInterval);
     timerInterval = null;
+  }
 
-    // остановка текущей озвучки
-    speechSynthesis.cancel();
+  // остановка озвучки
+  speechSynthesis.cancel();
 
-    // сброс секундомера
-    timerDiv.textContent = "00:00";
-
-    // очистка окна состава, если нужно
-    // document.getElementById("output").innerHTML = "Коснитесь кнопки пиццы для выбора";
-  });
-})();
+  // сброс UI
+  document.getElementById("timer").textContent = "00:00";
+};
 </script>
+
+  
+  
+  
+  
+
+
 </body>
 
 </html>
