@@ -241,7 +241,7 @@ async function startRecipe(name) {
     await new Promise(r => setTimeout(r, pause));
   }
  startTimer();
-  speak("Пора в печь");
+setTimeout(() => speak("Пора в печь"), 500);
   
 }
 let currentTimer = null;
