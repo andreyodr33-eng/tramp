@@ -236,13 +236,13 @@ async function startRecipe(name) {
   for (let item of recipe) {
    const line = `${item[0]} - ${item[1]} грамм`;
     output.innerHTML += `<div>${line}</div>`;
-    await new Promise(r => setTimeout(r, 50));
+    
     speak(line);
     await new Promise(r => setTimeout(r, pause));
   }
-
+ startTimer();
   speak("Пора в печь");
-  startTimer();
+  
 }
 let currentTimer = null;
 function startTimer() {
