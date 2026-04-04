@@ -280,7 +280,7 @@ function startTimer() {
 
   const interval = setInterval(() => {
     minute++;
-    timerDiv.textContent = `${minute} минута`;
+    timerDiv.textContent = `${minute}: ${sec}`;
 
     speak(`${minute} минута`);
 
