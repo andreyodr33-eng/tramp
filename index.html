@@ -237,6 +237,7 @@ async function startRecipe(name) {
   output.innerHTML = `<h2>${name.toUpperCase()}</h2>`;
 
   for (let item of recipe) {
+    if (isStopped) return;
     const line = `${item[0]} - ${item[1]} грамм`;
     output.innerHTML += `<div>${line}</div>`;
 
