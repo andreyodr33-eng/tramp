@@ -309,7 +309,7 @@ function startTimerWithVoice() {
     const sec = seconds % 60;
 
     timerDiv.textContent =
-      ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')};
+      `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
 
     // 🔊 озвучка минут
     if (sec === 0 && seconds <= maxSeconds) {
@@ -347,13 +347,5 @@ document.getElementById("stopBtn").onclick = () => {
   document.getElementById("timer").textContent = "00:00";
 };
 </script>
-
-  
-  
-  
-  
-
-
 </body>
-
 </html>
