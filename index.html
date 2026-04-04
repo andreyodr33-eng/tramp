@@ -114,7 +114,7 @@
       <div id="output">
         нажмите кнопку с названием пиццы
       </div>
-      <button id="micBtn" class="tg-box">stop</button>
+      <button id="micBtn" class="tg-box">x</button>
       
     </div>
   </div>
@@ -258,7 +258,7 @@ function startTimer() {
 
     speak(`${minute} минута`);
 
-    if (minute >= 4) {
+    if (minute >= 3) {
       clearInterval(interval);
       speak("Готово");
     }
