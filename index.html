@@ -1,375 +1,395 @@
-<!DOCTYPE html>
+<!Doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pizza Trainer</title>
-  <link rel="manifest" href="/tramp/manifest.json">
-   <link rel="icon" href="icon-192.png" type="image/png">
-  
-<style>
-/* контейнер всего интерфейса */
-#container {
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizza Trainer</title>
+    <link rel="manifest" href="/tramp/manifest.json" />
+    <link rel="icon" href="icon-192.png" type="image/png" />
 
-/* левая колонка */
-#pizza-list {
-  width: 25%;
-  background: #ffefd5;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-}
+    <style>
+      /* контейнер всего интерфейса */
+      #container {
+        display: flex;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+      }
 
-#pizza-list button {
-  padding: 15px;
-  font-size: 18px;
-  border-radius: 10px;
-  border: none;
-  background: #ff8c42;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%
-  box-sizing: border-box;
-  word-wrap: break-word;
-  white-space: normal;
-  text-align: center;
-}
+      /* левая колонка */
+      #pizza-list {
+        width: 25%;
+        background: #ffefd5;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
+      }
 
-/* правая колонка */
-#right-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  position: relative;
-}
+      #pizza-list button {
+        padding: 15px;
+        font-size: 18px;
+        border-radius: 10px;
+        border: none;
+        background: #ff8c42;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%
+        box-sizing: border-box;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: center;
+      }
 
-/* блок таймера и паузы */
-#controls {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 18px;
-}
+      /* правая колонка */
+      #right-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        position: relative;
+      }
 
-/* окно состава */
-#output {
-  flex: 1;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  padding: 15px;
-  font-size: 18px;
-  overflow-y: auto;
-  background: #fff8dc;
-}
+      /* блок таймера и паузы */
+      #controls {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
 
-/* кнопка микрофона */
-#micBtn {
-  margin-top: 10px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  font-size: 32px;
-  background: #27ae60;
-  color: white;
-  cursor: pointer;
-  align-self: center;
-  border: 3px solid #FFC966;
-}
-.tg-box:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  }
-</style>
-</head>
-<body>
-  <div id="container">
+      /* окно состава */
+      #output {
+        flex: 1;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 18px;
+        overflow-y: auto;
+        background: #fff8dc;
+      }
 
-    <!-- левая колонка с кнопками -->
-    <div id="pizza-list"></div>
+      /* кнопка микрофона */
+      #micBtn {
+        margin-top: 10px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        font-size: 32px;
+        background: #27ae60;
+        color: white;
+        cursor: pointer;
+        align-self: center;
+        border: 3px solid #FFC966;
+      }
+      .tg-box:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <!-- левая колонка с кнопками -->
+      <div id="pizza-list"></div>
 
-    <!-- правая колонка -->
-    <div id="right-panel">
-      <div id="controls">
-        <span id="timer">00:00</span>
-        <label>
-          Пауза (сек):
-          <input type="number" id="pauseInput" min="1" max="60" value="2" style="width:50px;">
-        </label>
-     
+      <!-- правая колонка -->
+      <div id="right-panel">
+        <div id="controls">
+          <span id="timer">00:00</span>
+          <label>
+            Пауза (сек):
+            <input
+              type="number"
+              id="pauseInput"
+              min="1"
+              max="60"
+              value="2"
+              style="width: 50px"
+            />
+          </label>
+        </div>
+        <div id="output">нажмите кнопку с названием пиццы</div>
+        <button id="micBtn" class="tg-box">x</button>
+        <p><a href="javascript:void(0)" onclick="shareCard()">📤 share</a></p>
       </div>
-      <div id="output">
-        нажмите кнопку с названием пиццы
-      </div>
-      <button id="micBtn" class="tg-box">x</button>
-      <p><a href="javascript:void(0)" onclick="shareCard()">📤 share</a></p>
     </div>
-  </div>
 
-  <script>
-// -------------------- рецепты --------------------
-const recipes = {
-  "карбонара": [
-    ["сливки", 50], 
-    ["сыр моцарелла", 90],
-    ["бекон", 60],
-    ["грибы", 38],
-    ["помидор", 30],
-    ["приправа орегано", 1]
-  ],
-  "пеперони": [
-    ["соус томадоро", 75],
-    ["сыр моцарелла", 120],
-    ["колбаски пеперони", 75],
-    ["cыр пармезан", 5]
-  ],
-  "маргарита": [
-    ["соус томадоро", 60],
-    ["сыр моцарелла", 120],
-    ["помидор", 60],
-    ["приправа орегано", 1]
-  ],
-   "салямі хіт": [
-    ["соус томадоро", 60],
-    ["сыр моцарелла", 90],
-    ["салями", 60], 
-    ["помидор", 60],
-    ["приправа орегано", 1]
-  ],
-  "барбекю": [
-    ["соус томадоро", 60],
-    ["соус барбекю", 20],
-    ["сыр моцарелла", 90],
-    ["бекон", 30],
-    ["филе курицы", 30],
-    ["грибы", 30],
-    ["перец болгарский", 30],
-    ["лук маринованый ", 30],
-    ["приправа орегано", 1]
-  ],
-  "чотири м'яса": [
-    ["соус горчичный", 60],
-    ["сыр моцарелла", 90],
-    ["шынка", 30],
-    ["бекон", 30],
-    ["салями", 30],
-    ["колбаски баварские", 30],
-    ["грибы", 30],
-    ["помидор", 60],
-    ["петрушка", 4]
-  ],
-  "чотири сира": [
-    ["сливки", 50], 
-    ["сыр моцарелла", 90],
-    ["сыр дор блю", 30],
-    ["сыр твёрдый", 30],
-    ["сыр фета", 30],
-    ["приправа орегано", 1]
-  ],
-   "сирне курча": [
-    ["соус горчичный", 60], 
-    ["сыр моцарелла", 90],
-    ["филе курицы", 60],
-    ["грибы", 30],
-    ["сыр твёрдий", 30],
-    ["приправа орегано", 1]
-  ],
- "селянська": [
-    ["соус горчичный", 60],
-    ["сыр моцарелла", 90],
-    ["бекон", 30],
-    ["шынка", 30],
-    ["грибы", 30],
-    ["огурцы солёные", 20],
-    ["лук маринованый", 30],
-    ["петрушка", 3]
-  ],
-  "баварська": [
-    ["соус горчичный", 60],
-    ["сыр моцарелла", 90],
-    ["бекон", 30],
-    ["колбаски баварские", 30],
-    ["грибы", 30],
-    ["перец болгарский", 30],
-    ["лук маринованый", 30],
-    ["смеcь трав", 1]
-  ],
-  "прованс": [
-    ["сливки", 47],
-    ["сыр моцарелла", 90],
-    ["колбаски пеперони", 30],
-    ["шынка", 30],
-    ["сыр дор блю", 30],
-    ["помидор", 60],
-    ["сыр пармезан", 6]
-  ],
-  "мексиканська": [
-    ["соус томадоро", 60],
-    ["соус шрирача", 10],
-    ["сыр моцарелла", 90],
-    ["колбаски баварские", 30],
-    ["копченое куриное филе", 30],
-    ["перец болгарский", 30],
-    ["кукуруза", 20],
-    ["перец чили", 4],
-    ["петрушка", 4]
-  ],
-  "д'ябло": [
-    ["соус томадоро", 60],
-    ["шрирача", 5],
-    ["сыр моцарелла", 90],
-    ["салями", 30],
-    ["шынка", 30],
-    ["грибы", 30],
-    ["перец болгарский", 20],
-    ["оливки", 10],
-    ["приправа орегано", 1]
-  ],
-   "м'ясна з грибами": [
-    ["сливки", 50],
-    ["сыр моцарелла", 90],
-    ["шынка", 30],
-    ["филе курицы", 30],
-    ["грибы", 30],
-    ["сыр твёрдый", 30],
-    ["лук маринованый", 20],
-    ["зелень свежая", 5]
-  ],
-  "феєрія": [
-    ["соус томадоро", 60],
-    ["сыр моцарелла", 90],
-    ["салями", 30], 
-    ["колбаски баварские", 30],
-    ["помидор", 40],
-    ["огурцы солёные", 20],
-    ["лук маринованый", 20],
-    ["зелень свежая", 5]
-  ],
-  "гавайська": [
-    ["соус томадоро", 60], 
-    ["сыр моцарелла", 90],
-    ["филе курицы", 60],
-    ["ананас", 40],
-    ["кукуруза", 20],
-    ["приправа орегано", 1]
-  ],
-   "спайсі ковбаски": [
-    ["соус томадоро", 60],
-    ["соус шрирача", 10],
-    ["сыр моцарелла", 90],
-    ["салями", 30],
-    ["колбаски пеперони", 30],
-    ["колбаски баварские", 60],
-    ["огурцы солёные", 20],
-    ["сыр пармезан", 5]
-   ]
-};
+    <script>
+            // -------------------- рецепты --------------------
+            const recipes = {
+              карбонара: [
+                ["сливки", 50],
+                ["сыр моцарелла", 90],
+                ["бекон", 60],
+                ["грибы", 38],
+                ["помидор", 30],
+                ["приправа орегано", 1],
+              ],
+              пеперони: [
+                ["соус томадоро", 75],
+                ["сыр моцарелла", 120],
+                ["колбаски пеперони", 75],
+                ["cыр пармезан", 5],
+              ],
+              маргарита: [
+                ["соус томадоро", 60],
+                ["сыр моцарелла", 120],
+                ["помидор", 60],
+                ["приправа орегано", 1],
+              ],
+              "салямі хіт": [
+                ["соус томадоро", 60],
+                ["сыр моцарелла", 90],
+                ["салями", 60],
+                ["помидор", 60],
+                ["приправа орегано", 1],
+              ],
+              барбекю: [
+                ["соус томадоро", 60],
+                ["соус барбекю", 20],
+                ["сыр моцарелла", 90],
+                ["бекон", 30],
+                ["филе курицы", 30],
+                ["грибы", 30],
+                ["перец болгарский", 30],
+                ["лук маринованый ", 30],
+                ["приправа орегано", 1],
+              ],
+              "чотири м'яса": [
+                ["соус горчичный", 60],
+                ["сыр моцарелла", 90],
+                ["шынка", 30],
+                ["бекон", 30],
+                ["салями", 30],
+                ["колбаски баварские", 30],
+                ["грибы", 30],
+                ["помидор", 60],
+                ["петрушка", 4],
+              ],
+              "чотири сира": [
+                ["сливки", 50],
+                ["сыр моцарелла", 90],
+                ["сыр дор блю", 30],
+                ["сыр твёрдый", 30],
+                ["сыр фета", 30],
+                ["приправа орегано", 1],
+              ],
+              "сирне курча": [
+                ["соус горчичный", 60],
+                ["сыр моцарелла", 90],
+                ["филе курицы", 60],
+                ["грибы", 30],
+                ["сыр твёрдий", 30],
+                ["приправа орегано", 1],
+              ],
+              селянська: [
+                ["соус горчичный", 60],
+                ["сыр моцарелла", 90],
+                ["бекон", 30],
+                ["шынка", 30],
+                ["грибы", 30],
+                ["огурцы солёные", 20],
+                ["лук маринованый", 30],
+                ["петрушка", 3],
+              ],
+              баварська: [
+                ["соус горчичный", 60],
+                ["сыр моцарелла", 90],
+                ["бекон", 30],
+                ["колбаски баварские", 30],
+                ["грибы", 30],
+                ["перец болгарский", 30],
+                ["лук маринованый", 30],
+                ["смеcь трав", 1],
+              ],
+              прованс: [
+                ["сливки", 47],
+                ["сыр моцарелла", 90],
+                ["колбаски пеперони", 30],
+                ["шынка", 30],
+                ["сыр дор блю", 30],
+                ["помидор", 60],
+                ["сыр пармезан", 6],
+              ],
+              мексиканська: [
+                ["соус томадоро", 60],
+                ["соус шрирача", 10],
+                ["сыр моцарелла", 90],
+                ["колбаски баварские", 30],
+                ["копченое куриное филе", 30],
+                ["перец болгарский", 30],
+                ["кукуруза", 20],
+                ["перец чили", 4],
+                ["петрушка", 4],
+              ],
+              "д'ябло": [
+                ["соус томадоро", 60],
+                ["шрирача", 5],
+                ["сыр моцарелла", 90],
+                ["салями", 30],
+                ["шынка", 30],
+                ["грибы", 30],
+                ["перец болгарский", 20],
+                ["оливки", 10],
+                ["приправа орегано", 1],
+              ],
+              "м'ясна з грибами": [
+                ["сливки", 50],
+                ["сыр моцарелла", 90],
+                ["шынка", 30],
+                ["филе курицы", 30],
+                ["грибы", 30],
+                ["сыр твёрдый", 30],
+                ["лук маринованый", 20],
+                ["зелень свежая", 5],
+              ],
+              феєрія: [
+                ["соус томадоро", 60],
+                ["сыр моцарелла", 90],
+                ["салями", 30],
+                ["колбаски баварские", 30],
+                ["помидор", 40],
+                ["огурцы солёные", 20],
+                ["лук маринованый", 20],
+                ["зелень свежая", 5],
+              ],
+              гавайська: [
+                ["соус томадоро", 60],
+                ["сыр моцарелла", 90],
+                ["филе курицы", 60],
+                ["ананас", 40],
+                ["кукуруза", 20],
+                ["приправа орегано", 1],
+              ],
+              "спайсі ковбаски": [
+                ["соус томадоро", 60],
+                ["соус шрирача", 10],
+                ["сыр моцарелла", 90],
+                ["салями", 30],
+                ["колбаски пеперони", 30],
+                ["колбаски баварские", 60],
+                ["огурцы солёные", 20],
+                ["сыр пармезан", 5],
+              ],  
+               "тісто для піцци": [
+                 ["мука 6,5 кг", 0],
+                 ["вода 3,5 литра", 0],
+                 ["соль", 100],
+                 ["сахар", 180],
+                 ["масло растительное", 400],
+                 ["дрожжи", 22],
+               ],
+            };
 
-// отображение кнопок
-const listDiv = document.getElementById("pizza-list");
-for (let name in recipes) {
-  const btn = document.createElement("button");
-  btn.textContent = name;
-  btn.onclick = () => startRecipe(name);
-  listDiv.appendChild(btn);
-}
+            // отображение кнопок
+            const listDiv = document.getElementById("pizza-list");
+            for (let name in recipes) {
+              const btn = document.createElement("button");
+              btn.textContent = name;
+              btn.onclick = () => startRecipe(name);
+              listDiv.appendChild(btn);
+            }
 
-const output = document.getElementById("output");
-const timerDiv = document.getElementById("timer");
+            const output = document.getElementById("output");
+            const timerDiv = document.getElementById("timer");
+             
+           
+            function speak(text) {
+              return new Promise(resolve => {
+              const utter = new SpeechSynthesisUtterance(text);
+              utter.lang = "ru-RU";
+              utter.onend = resolve;
+              speechSynthesis.speak(utter);
+            });
+          }
+        let currentTimer = null;
+        function startTimer() {
+        
+        let totalSeconds = 0;
 
-function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "ru-RU";
-  speechSynthesis.speak(utter);
-}
+        timerDiv.textContent = "00:00";
 
-async function startRecipe(name) {
-  const pause = parseInt(document.getElementById("pauseInput").value) * 1000;
-  const recipe = recipes[name];
+        currentTimer = setInterval(() => {
+          totalSeconds++;
 
-  output.innerHTML = `<h2>${name.toUpperCase()}</h2>`;
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
 
-  for (let item of recipe) {
-   const line = `${item[0]} - ${item[1]} грамм`;
-    output.innerHTML += `<div>${line}</div>`;
-    
-    speak(line);
-    await new Promise(r => setTimeout(r, pause));
-  }
- startTimer();
- if (currentTimer) {
-   clearInterval(currentTimer);
- }  
-setTimeout(() => speak("Пора в печь"), 500);
-  
-}
-let currentTimer = null;
-function startTimer() {
-  let minute = 0;
- // timerDiv.textContent = "";
+          timerDiv.textContent =
+            `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
-  const interval = setInterval(() => {
-    minute++;
-    timerDiv.textContent = `${minute} минута`;
+          if (seconds === 0 && totalSeconds > 0) {
+            speak(`${minutes} минута`);
+          }
 
-    speak(`${minute} минута`);
+          if (minutes >= 2) {
+            clearInterval(currentTimer);
+            currentTimer = null;
+            speak("Готово");
+          }
+         }, 1000);
+      
+        }
 
-    if (minute >= 2) {
-      clearInterval(interval);
-      speak("Готово");
-    }
-  }, 60000);
-}
+            async function startRecipe(name) {
+              const pause =
+                parseInt(document.getElementById("pauseInput").value) * 1000;
 
-// ---------------- STOP ----------------
-function stopAll() {
-  speechSynthesis.cancel();
+              const recipe = recipes[name];
 
-  if (currentTimer) {
-    clearInterval(currentTimer);
-    currentTimer = null;
-  }
+                output.innerHTML = `<h2>${name.toUpperCase()}</h2>`;
 
-  timerDiv.textContent = "00:00";
-  output.innerHTML = "Выберите пиццу";
-}
+              for (let item of recipe) {
+                  const line = `${item[0]} - ${item[1]} грамм`;
 
-// ---------------- кнопка STOP ----------------
-document.getElementById("micBtn").onclick = stopAll;
+              output.innerHTML += `<div>${line}</div>`;
 
-</script>
- <script>
-function shareCard() {
-  if (navigator.share) {
-    navigator.share({
-      title: "My digital card",
-      text: "Check out my digital business card:",
-      url: window.location.href
-    }).then(() => console.log("Shared successfully"))
-      .catch(err => console.log("Share failed:", err));
-  } else {
-    alert("Sharing is not supported in this browser.");
-  }
-}
- 
-    let count = 0;
- // Создаём функцию количество обновлений
-    function updateCount() {
-       count = count + 1;
-       document. getElementById("number").innerHTML = count;
-       setTimeout(updateCount, 1000);
-   }
-     
-</script>
-</body>
+              await speak(line); // 👈 ждём окончания озвучки
+              await new Promise(r => setTimeout(r, pause));
+        }
+
+              await speak("Пора в печь"); // 👈 ждём окончания
+             startTimer();               // 👈 теперь СТРОГО после речи
+       }
+          // ---------------- STOP ----------------
+            function stopAll() {
+
+              speechSynthesis.cancel();
+
+              if (currentTimer) {
+                clearInterval(currentTimer);
+                currentTimer = null;
+              }
+
+              timerDiv.textContent = "00:00";
+              output.innerHTML = "Выберите пиццу";
+            }
+
+            // ---------------- кнопка STOP ----------------
+            document.getElementById("micBtn").onclick = stopAll;
+
+
+            function shareCard() {
+              if (navigator.share) {
+                navigator
+                  .share({
+                    title: "My digital card",
+                    text: "Check out my digital business card:",
+                    url: window.location.href,
+                  })
+                  .then(() => console.log("Shared successfully"))
+                  .catch((err) => console.log("Share failed:", err));
+              } else {
+                alert("Sharing is not supported in this browser.");
+              }
+            }
+    </script>
+  </body>
 </html>
+
+                                
