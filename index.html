@@ -358,6 +358,15 @@ function shareCard() {
     alert("Sharing is not supported in this browser.");
   }
 }
+ <script>
+    let count = 0;
+ // Создаём функцию количество обновлений
+    function updateCount() {
+       count = count + 1;
+       document. getElementById("number").innerHTML = count;
+       setTimeout(updateCount, 1000);
+   }
+   </script>   
 </script>
 </body>
 </html>
