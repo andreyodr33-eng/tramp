@@ -307,13 +307,16 @@ async function startRecipe(name) {
     await new Promise(r => setTimeout(r, pause));
   }
  startTimer();
+ if (currentTimer) {
+   clearInterval(currentTimer);
+ }  
 setTimeout(() => speak("Пора в печь"), 500);
   
 }
 let currentTimer = null;
 function startTimer() {
   let minute = 0;
-  timerDiv.textContent = "";
+ // timerDiv.textContent = "";
 
   const interval = setInterval(() => {
     minute++;
