@@ -97,6 +97,12 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             background: linear-gradient(135deg, #ff758c, #ff7eb3);
         }
+     #bottom-bar {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       margin-top: 10px;
+     }
     </style>
   </head>
   <body>
@@ -121,8 +127,10 @@
           </label>
         </div>
         <div id="output">нажмите кнопку с названием пиццы</div>
+        <div id="bottom-bar">
         <button id="micBtn" class="tg-box">x</button>
-        <p><a href="javascript:void(0)" onclick="shareCard()">📤 share</a></p>
+        <a href="javascript:void(0)" onclick="shareCard()">📤 share</a>
+       </div>   
       </div>
     </div>
 
