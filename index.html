@@ -9,30 +9,23 @@
 
     <style>
       /* контейнер всего интерфейса */
-#container {
-  display: flex;
-  height: 100vh;
-  height: 100dvh;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
-}
+      #container {
+        display: flex;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+      }
 
-/* левая колонка */
-#pizza-list {
-  width: 25%;
-  background: #ffefd5;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-
-  box-sizing: border-box;
-  min-height: 0;
-}
-          #pizza-list button {
+      /* левая колонка */
+      #pizza-list {
+        width: 25%;
+        background: #ffefd5;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
+      }
+   #pizza-list button {
         padding: 15px;
         font-size: 18px;
         border-radius: 10px;
