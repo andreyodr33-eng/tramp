@@ -367,8 +367,11 @@
               await speak(line); // 👈 ждём окончания озвучки
               await new Promise(r => setTimeout(r, pause));
         }
-
-              await speak("Пора в печь"); // 👈 ждём окончания
+             if (name === "тісто для піцци") {
+                 await speak("Включай тестомес");
+             ) else {  
+                 await speak("Пора в печь");  // 👈 ждём окончания
+             } 
              startTimer();               // 👈 теперь СТРОГО после речи
        }
           // ---------------- STOP ----------------
