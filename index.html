@@ -310,9 +310,25 @@
               btn.onclick = () => startRecipe(name);
               listDiv.appendChild(btn);
             }
+      // защита прокрутки
+           const pizzaList = document.getElementById("pizza-list");
+          let startY = 0;
+          pizzaList.addEventListener("touchstart", (e) => { startY = e.touches[0].clientY; }, { passive: true });
+          pizzaList.addEventListener("touchmove", (e) => {
+          const deltaY =
+          e.touches[0].clientY - startY;
 
+       if (
+          pizzaList.scrollTop <= 0 &&
+          deltaY > 0
+    ) {
+           e.preventDefault();
+            return;
+     }
+     }, { passive: false });
             const output = document.getElementById("output");
             const timerDiv = document.getElementById("timer");
+      
           // Разблокировка речи в Safari на iPhone    
           document.addEventListener(
               "pointerup",
