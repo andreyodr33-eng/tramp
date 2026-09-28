@@ -690,24 +690,36 @@
 
     // -------------------- озвучка --------------------
 
-    function speak(text) {
+function speak(text) {
+    return new Promise(resolve => {
 
-        return new Promise(resolve => {
+    const utter = new SpeechSynthesisUtterance(text);
 
-            const utter =
-                new SpeechSynthesisUtterance(text);
+    utter.lang =
+        currentLanguage === "ru"
+            ? "ru-RU"
+            : "en-US";
 
-            utter.lang =
-                currentLanguage === "ru"
-                    ? "ru-RU"
-                    : "en-US";
+    const voices = speechSynthesis.getVoices();
 
-            utter.onend = resolve;
+    if (currentLanguage === "en") {
 
-            speechSynthesis.speak(utter);
+        const englishVoice =
+            voices.find(v => v.name === "Karen") ||
+            voices.find(v => v.name === "Samantha") ||
+            voices.find(v => v.name === "Daniel") ||
+            voices.find(v => v.lang.startsWith("en"));
 
-        });
+        if (englishVoice) {
+            utter.voice = englishVoice;
+        }
     }
+
+    utter.onend = resolve;
+
+    speechSynthesis.speak(utter);
+});
+}
 
 
     // -------------------- таймер --------------------
