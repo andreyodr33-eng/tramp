@@ -784,7 +784,7 @@ totalSeconds % 60;
     // -------------------- запуск рецепта --------------------
 
     async function startRecipe(name) {
-
+    document.getElementById("languageBtn").disabled = true;
         const pause =
             parseInt(
                 document
@@ -851,6 +851,7 @@ totalSeconds % 60;
 
 
         startTimer();
+     document.getElementById("languageBtn").disabled = false;   
     }
 
 
